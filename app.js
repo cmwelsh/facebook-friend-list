@@ -3,6 +3,7 @@
 var dotenv = require('dotenv');
 var express = require('express');
 var favicon = require('serve-favicon');
+var fb = require('fb');
 var http = require('http');
 var log = require('winston');
 var path = require('path');
@@ -11,6 +12,13 @@ var routes = require('./src/routes');
 
 process.chdir(__dirname);
 dotenv.load();
+
+fb.options({
+    appId: process.env.FACEBOOK_APP_ID,
+    appSecret: process.env.FACEBOOK_APP_SECRET,
+    redirectUri: 'http://' + process.env.HTTP_DOMAIN + ':' +
+            process.env.HTTP_PORT + '/login/callback'
+});
 
 var app = express();
 
@@ -33,6 +41,9 @@ app.use(express.cookieSession({
 app.get('/', routes.home);
 app.get('/api/auth', routes.auth);
 app.get('/api/friends', routes.friends);
+app.get('/login', routes.login);
+app.get('/login/callback', routes.loginCallback);
+app.get('/logout', routes.logout);
 
 http.createServer(app).listen(app.get('port'));
 log.info('Listening on port: ' + app.get('port'));

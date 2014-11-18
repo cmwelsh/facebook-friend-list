@@ -8,7 +8,8 @@
     "winston": "~0.8.3",
     "express": "~3.18.3",
     "fb": "~0.7.0",
-    "serve-favicon": "~2.1.6"
+    "serve-favicon": "~2.1.6",
+    "step": "0.0.5"
   },
   "devDependencies": {},
   "engine": "node >= 0.10.30",
