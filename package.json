@@ -6,12 +6,13 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "bluebird": "^2.3.11",
     "dotenv": "~0.4.0",
-    "winston": "~0.8.3",
     "express": "~3.18.3",
     "fb": "~0.7.0",
     "serve-favicon": "~2.1.6",
-    "step": "0.0.5"
+    "step": "0.0.5",
+    "winston": "~0.8.3"
   },
   "devDependencies": {},
   "engine": "node >= 0.10.30",

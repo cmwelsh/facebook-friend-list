@@ -21,18 +21,22 @@ define(function(require) {
             }))
             .bind(this)
             .then(function(responseData) {
+                var authenticated = false;
                 if (responseData.authenticated) {
-                    this.setState({
-                        authenticated: true
-                    });
-                } else {
-                    this.setState({
-                        authenticated: false
-                    });
+                    authenticated = true;
                 }
                 this.setState({
+                    authenticated: authenticated,
                     loading: false
                 });
+
+                if (authenticated) {
+                    return $.ajax({
+                        type: 'get',
+                        url: '/api/friends',
+                        dataType: 'json'
+                    });
+                }
             });
         },
         render: function() {

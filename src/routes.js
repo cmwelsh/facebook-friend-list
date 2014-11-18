@@ -1,9 +1,13 @@
 'use strict';
 
+var BPromise = require('bluebird');
 var fb = require('fb');
 var path = require('path');
 var step = require('step');
 var log = require('winston');
+var util = require('util');
+
+var fbApi = BPromise.promisify(fb.napi, fb);
 
 function auth(req, res) {
     var accessToken = req.session.access_token;
@@ -15,16 +19,25 @@ function auth(req, res) {
     }));
 }
 
-function friends(req, res) {
-    fb.api('me/friends', {
+function friends(req, res, next) {
+    fbApi('me/invitable_friends', {
         fields: 'name,picture',
         limit: 250,
         access_token: req.session.access_token
-    }, function(result) {
-        if (!result || result.error) {
-            return res.send(500, 'error');
-        }
-        res.send(result);
+    })
+    .then(function(responseData) {
+        responseData = JSON.parse(responseData);
+        var userData = responseData.data.map(function(userData) {
+            return {
+                name: userData.name,
+                pictureUrl: userData.picture.data.url
+            };
+        });
+        res.send(JSON.stringify(userData));
+    })
+    .catch(function(err) {
+        log.error('Error building friends response: ' + util.inspect(err));
+        next(err);
     });
 }
 
