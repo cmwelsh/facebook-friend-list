@@ -29,6 +29,7 @@ if (app.get('environment') === 'development') {
     app.use(express.errorHandler());
 }
 
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use(express.static(__dirname + '/public'));
 app.use(favicon(path.resolve(__dirname + '/public/images/favicon.ico')));
 var loggerType = app.get('environment') === 'development' ? 'dev' : 'default';

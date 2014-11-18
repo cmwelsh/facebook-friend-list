@@ -2,7 +2,9 @@
   "name": "facebook-friend-list",
   "version": "0.0.1",
   "description": "List Facebook friends",
-  "scripts": {},
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "dotenv": "~0.4.0",
     "winston": "~0.8.3",
