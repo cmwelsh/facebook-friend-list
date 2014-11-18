@@ -1,0 +1,19 @@
+{
+  "name": "facebook-friend-list",
+  "version": "0.0.1",
+  "description": "List Facebook friends",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "~0.4.0",
+    "winston": "~0.8.3",
+    "express": "~3.18.3",
+    "fb": "~0.7.0",
+    "serve-favicon": "~2.1.6",
+    "step": "0.0.5"
+  },
+  "devDependencies": {},
+  "engine": "node >= 0.10.30",
+  "private": true
+}
