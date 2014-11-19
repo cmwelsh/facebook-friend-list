@@ -7,7 +7,7 @@ var step = require('step');
 var log = require('winston');
 var util = require('util');
 
-var fbApi = BPromise.promisify(fb.napi, fb);
+var facebookApi = require('./lib/facebook-api');
 
 function auth(req, res) {
     var accessToken = req.session.access_token;
@@ -20,20 +20,27 @@ function auth(req, res) {
 }
 
 function friends(req, res, next) {
-    fbApi('me/invitable_friends', {
-        fields: 'name,picture',
-        limit: 250,
-        access_token: req.session.access_token
-    })
-    .then(function(responseData) {
-        responseData = JSON.parse(responseData);
-        var userData = responseData.data.map(function(userData) {
+    BPromise.all([
+        facebookApi.friends(req.session.access_token),
+        facebookApi.invitableFriends(req.session.access_token)
+    ])
+    .spread(function(friendsResponse, invitableFriendsResponse) {
+        var friends = friendsResponse.data.map(function(userData) {
             return {
+                id: userData.id,
                 name: userData.name,
                 pictureUrl: userData.picture.data.url
             };
         });
-        res.send(JSON.stringify(userData));
+        var invitableFriends = invitableFriendsResponse.data.map(function(userData) {
+            return {
+                id: userData.id,
+                name: userData.name,
+                pictureUrl: userData.picture.data.url
+            };
+        });
+        var allFriends = friends.concat(invitableFriends);
+        res.send(JSON.stringify(allFriends));
     })
     .catch(function(err) {
         log.error('Error building friends response: ' + util.inspect(err));
