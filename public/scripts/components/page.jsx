@@ -7,10 +7,13 @@ define(function(require) {
     var Button = require('react-bootstrap/Button');
     var ButtonToolbar = require('react-bootstrap/ButtonToolbar');
 
+    var Friends = require('jsx!components/friends');
+
     return React.createClass({
         getInitialState: function() {
             return {
-                loading: true
+                authenticated: null,
+                friends: null
             };
         },
         componentDidMount: function() {
@@ -26,21 +29,16 @@ define(function(require) {
                     authenticated = true;
                 }
                 this.setState({
-                    authenticated: authenticated,
-                    loading: false
+                    authenticated: authenticated
                 });
 
                 if (authenticated) {
-                    return $.ajax({
-                        type: 'get',
-                        url: '/api/friends',
-                        dataType: 'json'
-                    });
+                    this.getFriends();
                 }
             });
         },
         render: function() {
-            if (this.state.loading) {
+            if (this.state.authenticated === null) {
                 return <h1>Loading...</h1>;
             }
 
@@ -55,10 +53,18 @@ define(function(require) {
                 </Button>;
             }
 
+            var friendsComponent;
+            if (this.state.friends) {
+                friendsComponent = <Friends friends={this.state.friends} />;
+            } else if (this.state.authenticated) {
+                friendsComponent = <p>Loading friends...</p>;
+            }
+
             return <div>
                 <ButtonToolbar>
                     {loginButton}
                 </ButtonToolbar>
+                {friendsComponent}
             </div>;
         },
         onLoginClicked: function() {
@@ -66,6 +72,19 @@ define(function(require) {
         },
         onLogoutClicked: function() {
             document.location.href = '/logout';
+        },
+        getFriends: function() {
+            BPromise.resolve($.ajax({
+                type: 'get',
+                url: '/api/friends',
+                dataType: 'json'
+            }))
+            .bind(this)
+            .then(function(friendsData) {
+                this.setState({
+                    friends: friendsData
+                });
+            });
         }
     });
 });
