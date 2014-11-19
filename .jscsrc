@@ -38,6 +38,7 @@
     "disallowTrailingComma": true,
     "disallowYodaConditions": true,
     "excludeFiles": [
+        "bower_components/**",
         "node_modules/**"
     ],
     "fileExtensions": [

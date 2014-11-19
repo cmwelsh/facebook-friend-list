@@ -1,9 +1,13 @@
 'use strict';
 
+var BPromise = require('bluebird');
 var fb = require('fb');
 var path = require('path');
 var step = require('step');
 var log = require('winston');
+var util = require('util');
+
+var facebookApi = require('./lib/facebook-api');
 
 function auth(req, res) {
     var accessToken = req.session.access_token;
@@ -15,16 +19,32 @@ function auth(req, res) {
     }));
 }
 
-function friends(req, res) {
-    fb.api('me/friends', {
-        fields: 'name,picture',
-        limit: 250,
-        access_token: req.session.access_token
-    }, function(result) {
-        if (!result || result.error) {
-            return res.send(500, 'error');
-        }
-        res.send(result);
+function friends(req, res, next) {
+    BPromise.all([
+        facebookApi.friends(req.session.access_token),
+        facebookApi.invitableFriends(req.session.access_token)
+    ])
+    .spread(function(friendsResponse, invitableFriendsResponse) {
+        var friends = friendsResponse.data.map(function(userData) {
+            return {
+                id: userData.id,
+                name: userData.name,
+                pictureUrl: userData.picture.data.url
+            };
+        });
+        var invitableFriends = invitableFriendsResponse.data.map(function(userData) {
+            return {
+                id: userData.id,
+                name: userData.name,
+                pictureUrl: userData.picture.data.url
+            };
+        });
+        var allFriends = friends.concat(invitableFriends);
+        res.send(JSON.stringify(allFriends));
+    })
+    .catch(function(err) {
+        log.error('Error building friends response: ' + util.inspect(err));
+        next(err);
     });
 }
 

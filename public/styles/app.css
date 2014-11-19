@@ -1,0 +1,27 @@
+#container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 3rem;
+}
+
+.navigation {
+    margin-bottom: 1.5rem;
+}
+
+/* clearfix */
+.friends:before,
+.friends:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+.friends:after {
+    clear: both;
+}
+
+.friend {
+    position: relative;
+
+    float: left;
+    width: 50px;
+    height: 50px;
+}
