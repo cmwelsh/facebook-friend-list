@@ -2,7 +2,6 @@ define(function(require) {
     'use strict';
 
     var React = require('react');
-    var ButtonToolbar = require('react-bootstrap/ButtonToolbar');
 
     return React.createClass({
         render: function() {

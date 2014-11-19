@@ -1,6 +1,11 @@
 #container {
     max-width: 900px;
     margin: 0 auto;
+    padding: 1.5rem 3rem;
+}
+
+.navigation {
+    margin-bottom: 1.5rem;
 }
 
 /* clearfix */

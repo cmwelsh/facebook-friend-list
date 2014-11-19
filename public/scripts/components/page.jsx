@@ -4,10 +4,9 @@ define(function(require) {
     var BPromise = require('bluebird');
     var $ = require('jquery');
     var React = require('react');
-    var Button = require('react-bootstrap/Button');
-    var ButtonToolbar = require('react-bootstrap/ButtonToolbar');
 
     var Friends = require('jsx!components/friends');
+    var Navigation = require('jsx!components/navigation');
 
     return React.createClass({
         getInitialState: function() {
@@ -38,40 +37,24 @@ define(function(require) {
             });
         },
         render: function() {
-            if (this.state.authenticated === null) {
+            var authenticated = this.state.authenticated;
+            if (authenticated === null) {
                 return <h1>Loading...</h1>;
-            }
-
-            var loginButton;
-            if (this.state.authenticated) {
-                loginButton = <Button onClick={this.onLogoutClicked} bsStyle="primary" bsSize="large">
-                    Logout
-                </Button>;
-            } else {
-                loginButton = <Button onClick={this.onLoginClicked} bsStyle="primary" bsSize="large">
-                    Login
-                </Button>;
             }
 
             var friendsComponent;
             if (this.state.friends) {
                 friendsComponent = <Friends friends={this.state.friends} />;
-            } else if (this.state.authenticated) {
+            } else if (authenticated) {
                 friendsComponent = <p>Loading friends...</p>;
+            } else {
+                friendsComponent = <p>Sign in with Facebook to see a collage of friends!</p>;
             }
 
             return <div>
-                <ButtonToolbar>
-                    {loginButton}
-                </ButtonToolbar>
+                <Navigation authenticated={authenticated} />
                 {friendsComponent}
             </div>;
-        },
-        onLoginClicked: function() {
-            document.location.href = '/login';
-        },
-        onLogoutClicked: function() {
-            document.location.href = '/logout';
         },
         getFriends: function() {
             BPromise.resolve($.ajax({
