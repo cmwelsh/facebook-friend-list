@@ -24,7 +24,19 @@ Install Bower dependencies:
 
 # Configure
 
-Copy the example environment variables and fill them in with correct values:
+Register your application with Facebook at [Facebook Developers][2] and
+configure the application to have support for the following platforms under
+the Settings tab:
+
+* Facebook Canvas (required for invitable friends API, see Issues and
+  Workarounds below)
+* Website
+
+Under the App Details tab, make sure you set the category to "Games" (required
+for invitable friends API).
+
+Copy the example environment variables and fill them in with correct values,
+including the Facebook App ID and App Secret from the Facebook Developers site.
 
     $ cp .env-example .env
 
@@ -35,8 +47,6 @@ Run HTTP server:
     $ npm start
 
 Navigate to `http://localhost:3000` in a browser.
-
-[1]: https://github.com/creationix/nvm
 
 # Issues & Workarounds
 
@@ -53,3 +63,6 @@ are also using the application) with the results of the invitable friends API
 (friends who are not also using the application). Unfortunately, this means
 that you cannot provide a link directly to a friend's Facebook profile,
 because the user IDs provided by the invitable friends API are anonymized.
+
+[1]: https://github.com/creationix/nvm
+[2]: https://developers.facebook.com/
