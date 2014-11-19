@@ -8,7 +8,7 @@ var fbApi = BPromise.promisify(fb.napi, fb);
 function friends(accessToken) {
     return fbApi('me/friends', {
         fields: 'name,picture',
-        limit: 250,
+        limit: 2000,
         access_token: accessToken
     });
 }
@@ -16,7 +16,7 @@ function friends(accessToken) {
 function invitableFriends(accessToken) {
     return fbApi('me/invitable_friends', {
         fields: 'name,picture',
-        limit: 250,
+        limit: 2000,
         access_token: accessToken
     });
 }
